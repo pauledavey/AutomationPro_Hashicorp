@@ -2,7 +2,7 @@
 clear
 
 function menu() {
-SEL=$(whiptail --title "AutomationPro - Hashicorp Assistant" --menu "Choose an option" 25 78 16 \
+SEL=$(whiptail --title "AutomationPro - Hashicorp Assistant" --menu "Choose an option" 8 78 0 \
    "1" "Install Packer 1.6.2" \
    "2" "Exit" 3>&1 1>&2 2>&3)
 
@@ -14,7 +14,7 @@ case $SEL in
 	ExtractPacker
 	Cleanup
 	CloneAutomationProPackerGithubPublicRepo
-        whiptail --title "Automationpro Configurator" --msgbox "Configuration is complete. For more information please check the github repository and/or its' WIKI" 8 78
+        whiptail --title "Automationpro Configurator" --msgbox "Configuration is complete. For more information please check the github repository and/or its' WIKI" 8 78 0
    ;;
    2)
         exit
@@ -69,7 +69,3 @@ wget https://download-ib01.fedoraproject.org/pub/epel/7/x86_64/Packages/p/pv-1.4
 rpm -Uvh *rpm
 clear
 menu
-
-
-
-

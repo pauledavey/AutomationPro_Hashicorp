@@ -1,5 +1,5 @@
 # AutomationPro Hashicorp Repository
-![Image of Yaktocat](https://octodex.github.com/images/yaktocat.png)
+![IaC_HashiCorp](https://automationpro.co.uk/wp-content/uploads/2020/08/IaC.jpg)
 
 This repository contains helpers and examples as per documented at http://automationpro.co.uk relating to Hashicorp products.
 

@@ -62,8 +62,9 @@ function Cleanup() {
        sleep 2s | whiptail --gauge "Removing packer_1.6.2_linux_amd64.zip archive" --title "Automationpro Configurator" 8 78 0
 }
 
+
 function CloneAutomationProPackerGithubPublicRepo() {
-   git clone https://github.com/pauledavey/AutomationPro_Packer.git /usr/local/bin/hashicorp/automationpro/packer_repo > /dev/null 2>&1 |
+   git clone https://github.com/pauledavey/AutomationPro_Hashicorp.git /usr/local/bin/hashicorp/automationpro > /dev/null 2>&1 |
    stdbuf -o0 awk '/[.] +[0-9][0-9]?[0-9]?%/ { print substr($0,63,3) }' |
    whiptail --gauge "Cloning AutomationPro Packer Github repository" --title "Automationpro Configurator" 8 78 0
 }
@@ -74,3 +75,7 @@ wget https://download-ib01.fedoraproject.org/pub/epel/7/x86_64/Packages/p/pv-1.4
 rpm -Uvh *rpm
 clear
 menu
+
+
+
+

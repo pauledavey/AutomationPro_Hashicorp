@@ -1,4 +1,6 @@
 # AutomationPro Hashicorp Repository
+![Image of Yaktocat](https://octodex.github.com/images/yaktocat.png)
+
 This repository contains helpers and examples as per documented at http://automationpro.co.uk relating to Hashicorp products.
 
 ### To get started

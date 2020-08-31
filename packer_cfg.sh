@@ -1,4 +1,3 @@
-#!/usr/bin/env bash
 #!/bin/bash
 #-----------------------------------------------------------------
 # The spinner in this script:

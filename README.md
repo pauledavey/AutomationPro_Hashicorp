@@ -1,4 +1,4 @@
-# AutomationPro_Packer
+# AutomationPro_Hashicorp
 This repository contains packer examples as per documented at http://automationpro.co.uk
 
 To get started

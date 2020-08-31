@@ -1,65 +1,76 @@
 #!/bin/bash
-#-----------------------------------------------------------------
-# The spinner in this script:
-#   Copyright of KatworX© Tech. Developed by Arjun Singh Kathait
-#   and Debugged by the Stack Overflow Community
-#-----------------------------------------------------------------
-
-spinner() {
-    local PROC="$1"
-    local str="${2:-'Copyright of KatworX© Tech. Developed by Arjun Singh Kathait and Debugged by the ?Stack Overflow Community?'}"
-    local delay="0.1"
-    tput civis  # hide cursor
-    printf "\033[1;34m"
-    while [ -d /proc/$PROC ]; do
-        printf '\033[s\033[u[ / ] %s\033[u' "$str"; sleep "$delay"
-        printf '\033[s\033[u[ — ] %s\033[u' "$str"; sleep "$delay"
-        printf '\033[s\033[u[ \ ] %s\033[u' "$str"; sleep "$delay"
-        printf '\033[s\033[u[ | ] %s\033[u' "$str"; sleep "$delay"
-    done
-    printf '\033[s\033[u%*s\033[u\033[0m' $((${#str}+6)) " "  # return to normal
-    tput cnorm  # restore cursor
-    return 0
-}
 clear
-echo "AutomationPro Packer Install & Config Script"
-echo "--------------------------------------------"
 
-sleep 5 & spinner $! "Install wget, nano, git & unzip"
-sudo yum install wget nano unzip -y > /dev/null 2>&1
+function menu() {
+SEL=$(whiptail --title "AutomationPro - Hashicorp Assistant" --menu "Choose an option" 25 78 16 \
+   "1" "Install Packer 1.6.2" \
+   "2" "Install Packer 1.6.2 & Vault 1.5.2 [itegrated]" \
+   "3" "Clone AutomationPro Packer repo" 3>&1 1>&2 2>&3)
 
-sleep 5 & spinner $! "Create the /usr/bin/hashicorp folder"
-mkdir -p /usr/local/bin/hashicorp > /dev/null 2>&1
+case $SEL in
+   1)
+	CheckSystemRequirements
+	CreateRequiredFolders
+	DownloadPacker
+	ExtractPacker
+	Cleanup
+	CloneAutomationProPackerGithubPublicRepo
+        whiptail --title "Automationpro Configurator" --msgbox "Configuration is complete. For more information please check the github repository and/or its' WIKI" 8 78
+   ;;
+   2)
+	echo "Option 2"
+	whiptail --title "Option 2" --msgbox "You chose option 2. Exit status $?" 8 45
+   ;;
+   1)
+	echo "Option 3"
+	whiptail --title "Option 3" --msgbox "You chose option 3. Exit status $?" 8 45
+   ;;
+esac
+}
 
-sleep 5 & spinner $! "Create the /usr/bin/hashicorp/packer folder"
-mkdir -p /usr/local/bin/hashicorp/packer > /dev/null 2>&1
+function CheckSystemRequirements() {
+  { echo -e "XXX\n0\nInstalling wget via yum\nXXX"
+     yum install wget -y
+     echo -e "XXX\n25\nInstalling unzip via yum\nXXX"
+     yum install unzip -y
+     echo -e "XXX\n50\nInstalling nano via yum\nXXX"
+     yum install nano -y
+     echo -e "XXX\n75\nInstalling git via yum\nXXX"
+     yum install git -y
+     sleep 2s
+  } | whiptail --gauge "Installing any missing requirements" --title "Automationpro Configurator" 8 78 0
+}
 
-sleep 5 & spinner $! "Navigate to directory"
-cd /usr/local/bin/hashicorp/packer > /dev/null 2>&1
+function CreateRequiredFolders() {
+  { echo -e "XXX\n0\nFolders in path '/usr/local/bin/hashicorp/packer162'\nXXX"
+     mkdir -p /usr/local/bin/hashicorp/packer162
+     sleep 2s
+  } | whiptail --gauge "Creating any missing [required] folders" --title "Automationpro Configuration" 8 78 0
+}
 
-sleep 5 & spinner $! "Download Packer [version 1.6.2]"
-wget https://releases.hashicorp.com/packer/1.6.2/packer_1.6.2_linux_amd64.zip > /dev/null 2>&1
+function DownloadPacker() {
+   URL="https://releases.hashicorp.com/packer/1.6.2/packer_1.6.2_linux_amd64.zip"
+   wget -P /usr/local/bin/hashicorp/packer162 "$URL" 2>&1 | sed -un 's/.* \([0-9]\+\)% .*/\1/p' | whiptail --gauge "Downloading packer_1.6.2_linux_amd64.zip" 8 78 0
+}
 
-sleep 5 & spinner $! "Extract Packer from zip file"
-unzip packer_1.6.2_linux_amd64.zip > /dev/null 2>&1
+function ExtractPacker() {
+   (pv -n /usr/local/bin/hasicorp/packer162/packer_1.6.2_linux_amd64.zip | unzip /usr/local/bin/hashicorp/packer162/packer_1.6.2_linux_amd64.zip -d /usr/local/bin/hashicorp/packer162/ ) 2>&1 | whiptail --gauge "Extracting packer_1.6.2_linux_amd64.zip" --title "Automationpro Configuration" 8 78 0
+}
 
-sleep 5 & spinner $! "Removing zip file"
-rm -f packer_1.6.2_linux_amd64.zip > /dev/null 2>&1
+function Cleanup() {
+       rm -r -f /usr/local/bin/hashicorp/packer162/packer_1.6.2_linux_amd64.zip
+       sleep 2s | whiptail --gauge "Removing packer_1.6.2_linux_amd64.zip archive" --title "Automationpro Configurator" 8 78 0
+}
 
-sleep 5 & spinner $! "Confirm correct version of Hashicorp Packer is installed"
-packerversion=$(/usr/local/bin/hashicorp/packer/packer --version) > /dev/null 2>&1
+function CloneAutomationProPackerGithubPublicRepo() {
+   git clone https://github.com/pauledavey/AutomationPro_Packer.git /usr/local/bin/hashicorp/automationpro/packer_repo > /dev/null 2>&1 |
+   stdbuf -o0 awk '/[.] +[0-9][0-9]?[0-9]?%/ { print substr($0,63,3) }' |
+   whiptail --gauge "Cloning AutomationPro Packer Github repository" --title "Automationpro Configurator" 8 78 0
+}
 
-if [ "$packerversion" == "1.6.2" ]; then
-	sleep 5 & spinner $! "Packer [version 1.6.2] install. They call it a Royale with cheese..."
-else
-    echo -e "...Houston, we have a problem.." \e[101mLight red
-    echo -e "Packer version is $packerversion, expected version 1.6.2" \e[101mLight red
-    exit 1
-fi
-
-sleep 5 & spinner $! "Cloning Automationpro public packer github repo"
-cd /usr/local/bin/hashicorp/packer > /dev/null 2>&1
-git clone https://github.com/pauledavey/AutomationPro_Packer.git > /dev/null 2>&1
-echo "Operation(s) Complete. You're welcome. Roadhouse.."
-echo "--------------------------------------------"
-
+echo "Making magic.. please wait.."
+cd /tmp
+wget https://download-ib01.fedoraproject.org/pub/epel/7/x86_64/Packages/p/pv-1.4.6-1.el7.x86_64.rpm
+rpm -Uvh *rpm
+clear
+menu

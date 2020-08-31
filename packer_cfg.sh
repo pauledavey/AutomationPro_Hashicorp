@@ -14,21 +14,12 @@ case $SEL in
 	ExtractPacker
 	Cleanup
 	CloneAutomationProPackerGithubPublicRepo
-        ModifyPath
         whiptail --title "Automationpro Configurator" --msgbox "Configuration is complete. For more information please check the github repository and/or its' WIKI" 8 78 0
    ;;
    2)
         exit
    ;;
 esac
-}
-
-function ModifyPath() {
-  { echo -e "XXX\n0\nAdding '/usr/local/bin/hashicorp/packer162' to path\nXXX"
-     echo 'export PATH=/usr/local/bin/hashicorp/packer162:$PATH' >>~/.bash_profile
-     sleep 2s
-  } | whiptail --gauge "Adding /usr/local/bin/hashicorp/packer162 to path" --title "Automationpro Configurator" 8 78 0
-
 }
 
 function CheckSystemRequirements() {

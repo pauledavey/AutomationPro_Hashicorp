@@ -7,18 +7,18 @@ This repository contains helpers and examples as per documented at http://automa
 
 #### Option 1
 * Download the packer_cfg.sh script using the following command
-   ```
-   curl https://raw.githubusercontent.com/pauledavey/AutomationPro_Hashicorp/master/packer_cfg.sh -o packer_cfg.sh
-```
+
+    curl https://raw.githubusercontent.com/pauledavey/AutomationPro_Hashicorp/master/packer_cfg.sh -o packer_cfg.sh
+
 * Make sure the file is executable, by running the following command
-     ```
-     chmod +x packer_cfg.sh
-     ```
+
+    chmod +x packer_cfg.sh
+    
 * Execute the script using the command below. Make your choices from the menu, then kick back and relax until it completes
-     ```
-     ./packer_cfg.sh
-```
+
+    ./packer_cfg.sh
+
 #### Option 2
 * Run the script direct from the github repository, by executing the following command
-     bash <(curl -s https://raw.githubusercontent.com/pauledavey/AutomationPro_Hashicorp/master/packer_cfg.sh)
+    bash <(curl -s https://raw.githubusercontent.com/pauledavey/AutomationPro_Hashicorp/master/packer_cfg.sh)
 * Kick back and relax until it completes

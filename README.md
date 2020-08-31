@@ -1,4 +1,4 @@
-# AutomationPro_Hashicorp
+# AutomationPro Hashicorp Repository
 This repository contains helpers and examples as per documented at http://automationpro.co.uk relating to Hashicorp products.
 
 To get started

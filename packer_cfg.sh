@@ -22,12 +22,11 @@ case $SEL in
         CreateRequiredVaultFolders
         DownloadVault
         ExtractVault
-        SetVaultOwnership
         GetVaultHcl
         InitialVaultConfigurationPart1
         InitialVaultConfigurationPart2
         StartVault
-        Cleanup
+        CleanupVault
    ;;
    3)
         CloneAutomationProPackerGithubPublicRepo
@@ -124,6 +123,10 @@ function CleanupPacker() {
        sleep 2s | whiptail --gauge "Removing packer_1.6.2_linux_amd64.zip archive" --title "Automationpro Configurator" 8 78 0
 }
 
+function CleanupVault() {
+       rm -r -f /usr/local/bin/hashicorp/vault153/vault_1.5.3_linux_amd64.zip
+       sleep 2s | whiptail --gauge "Removing vault_1.5.3_linux_amd64.zip archive" --title "Automationpro Configurator" 8 78 0
+}
 
 ## Github Clone Option
 function CloneAutomationProPackerGithubPublicRepo() {

@@ -71,7 +71,7 @@ function InitialVaultConfigurationPart2() {
    wget -P /etc/systemd/system "$VAULTSERVICEFILE" 2>&1 | sed -un 's/.* \([0-9]\+\)% .*/\1/p' | whiptail --gauge "Initial Vault configuration (part2)" --title "Automationpro Configurator" 8 78 0
 }
 
-function InitialVaultConfiguratioNpart3() {
+function InitialVaultConfigurationPart3() {
     chown --recursive vault:vault /etc/vault.d
     sudo chmod 640 /etc/vault.d/vault.hcl
 }

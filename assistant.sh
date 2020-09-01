@@ -18,15 +18,7 @@ case $SEL in
 	whiptail --title "Automationpro Configurator" --msgbox "Configuration is complete. For more information please check the github repository and/or its' WIKI" 8 78 0
    ;;
    2)
-        CheckSystemRequirements
-        CreateRequiredVaultFolders
-        DownloadVault
-        ExtractVault
-        GetVaultHcl
-        InitialVaultConfigurationPart1
-        InitialVaultConfigurationPart2
-        StartVault
-        CleanupVault
+        InstallVault
    ;;
    3)
         CloneAutomationProPackerGithubPublicRepo
@@ -50,6 +42,75 @@ function CheckSystemRequirements() {
      sleep 2s
   } | whiptail --gauge "Installing any missing requirements" --title "Automationpro Configurator" 8 78 0
 }
+
+
+function InstallVault() {
+    DownloadVault
+    UnzipVault
+    CreateVaultFolders
+    DownloadConfigJson
+    EditConfigJsonFile
+    CreateVaultServiceFile
+    StartVaultService
+    EnableForBootup
+    ConfigureVaultExports
+    InitiateVaultServer
+}
+
+
+function DownloadVault() {
+  VAULTURL="https://releases.hashicorp.com/vault/1.5.3/vault_1.5.3_linux_amd64.zip"
+  wget -P /tmp/ "$VAULTURL" 2>&1 | sed -un 's/.* \([0-9]\+\)% .*/\1/p' | whiptail --gauge "Downloading vault_1.5.3_linux_amd64.zip" --title "Automationpro Configurator" 8 78 0
+}
+
+function UnzipVault() {
+  (pv -n /tmp/vault_1.5.3_linux_amd64.zip | unzip /tmp/vault_1.5.3_linux_amd64.zip -d /usr/bin/ ) 2>&1 | whiptail --gauge "Extracting vault_1.5.3_linux_amd64.zip" --title "Automationpro Configurator" 8 78 0
+}
+
+function CreateVaultFolders() {
+   { echo -e "XXX\n0\nCreating /etc/vault\nXXX"
+     mkdir /etc/vault
+     echo -e "XXX\n25\nCreating /vault-data\nXXX"
+     mkdir /vault-data
+     echo -e "XXX\n50\n/logs/vault/\nXXX"
+     mkdir -p /logs/vault/
+     sleep 2s
+  } | whiptail --gauge "Creating required folders" --title "Automationpro Configurator" 8 78 0
+}
+
+function DownloadConfigJson() {
+  VAULTCFG="https://raw.githubusercontent.com/pauledavey/AutomationPro_Hashicorp/master/config.json"
+  wget -P /etc/vault/ "$VAULTCFG" 2>&1 | sed -un 's/.* \([0-9]\+\)% .*/\1/p' | whiptail --gauge "Downloading config.json file" --title "Automationpro Configurator" 8 78 0
+}
+
+function EditConfigJsonFile() {
+  sed -i 's/<IPADDRESS>/ $(hostname -I)/g' /etc/vault/config.json
+}
+
+function CreateVaultServiceFile() {
+  VAULTSERVICE="https://raw.githubusercontent.com/pauledavey/AutomationPro_Hashicorp/master/vault.service"
+  wget -P /etc/systemd/system/vault.service "$VAULTSERVICE" 2>&1 | sed -un 's/.* \([0-9]\+\)% .*/\1/p' | whiptail --gauge "Downloading config.json file" --title "Automationpro Configurator" 8 78 0
+}
+
+function StartVaultService() {
+  systemctl start vault.service
+}
+
+function EnableForBootup() {
+  systemctl enable vault.service
+}
+
+function ConfigureVaultExports() {
+  export VAULT_ADDR='http://$(hostname -I):8200'
+  echo "export VAULT_ADDR=http://$(hostname -I):8200" >> ~/.bashrc
+}
+
+function InitiateVaultServer() {
+  vault operator init > /tmp/init.file
+}
+
+
+
 
 
 ## Vault

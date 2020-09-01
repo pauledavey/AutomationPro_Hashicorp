@@ -55,7 +55,7 @@ function CheckSystemRequirements() {
 ## Vault
 function InitialVaultConfigurationPart1() {
   {  echo -e "XXX\n10\nCreate Vault user (non-privileged)\nXXX"
-     sudo useradd --system --home /etc/vault.d --shell /bin/false vault
+     sudo useradd --system --home /usr/local/bin/hashicorp/vault153 --shell /bin/false vault
      echo -e "XXX\n30\nSetting owner on /usr/local/bin/hashicorp/vault153/vault\nXXX"
      sudo chown -R vault:vault /usr/local/bin/hashicorp/vault153
      echo -e "XXX\n67\nConfigure Vault autocomplete\nXXX"

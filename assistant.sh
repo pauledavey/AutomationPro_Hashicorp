@@ -72,7 +72,8 @@ function InitialVaultConfigurationPart2() {
 
 function CreateRequiredVaultFolders() {
   { echo -e "XXX\n0\nFolders in path '/usr/local/bin/hashicorp/vault153/vaultdata'\nXXX"
-     mkdir -p /usr/local/bin/hashicorp/vault153/vaultdata
+     mkdir --parents /usr/local/bin/hashicorp/vault153/vaultdata
+     mkdir --parents /etc/vault.d
      sleep 2s
   } | whiptail --gauge "Creating any missing [required] folders" --title "Automationpro Configurator" 8 78 0
 }
@@ -95,7 +96,7 @@ function DownloadVault() {
 
 function GetVaultHcl() {
    VAULTCONFIGURL="https://raw.githubusercontent.com/pauledavey/AutomationPro_Hashicorp/master/config.hcl"
-   wget -P /usr/local/bin/hashicorp/vault153 "$VAULTCONFIGURL" 2>&1 | sed -un 's/.* \([0-9]\+\)% .*/\1/p' | whiptail --gauge "Downloading basic vault.hcl file" --title "Automationpro Configurator" 8 78 0
+   wget -P /etc/vault.d/config.hcl "$VAULTCONFIGURL" 2>&1 | sed -un 's/.* \([0-9]\+\)% .*/\1/p' | whiptail --gauge "Downloading basic vault.hcl file" --title "Automationpro Configurator" 8 78 0
 }
 
 function ExtractVault() {

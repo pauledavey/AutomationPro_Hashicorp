@@ -55,9 +55,9 @@ function CheckSystemRequirements() {
 ## Vault
 function InitialVaultConfigurationPart1() {
   {  echo -e "XXX\n10\nCreate Vault user (non-privileged)\nXXX"
-     sudo useradd --system --home /usr/local/bin/hashicorp/vault153 --shell /bin/false vault
+     sudo useradd --system --home /etc/vault.d --shell /bin/false vault
      echo -e "XXX\n30\nSetting owner on /usr/local/bin/hashicorp/vault153/vault\nXXX"
-     sudo chown root:root /usr/local/bin/hashicorp/vault153/vault
+     sudo chown -R vault:vault /usr/local/bin/hashicorp/vault153
      echo -e "XXX\n67\nConfigure Vault autocomplete\nXXX"
      ./usr/local/bin/hashicorp/vault153/vault -autocomplete-install
      echo -e "XXX\n88\nEnable Vault autocompletion\nXXX"
@@ -72,7 +72,7 @@ function InitialVaultConfigurationPart2() {
 
 function CreateRequiredVaultFolders() {
   { echo -e "XXX\n0\nFolders in path '/usr/local/bin/hashicorp/vault153/vaultdata'\nXXX"
-     mkdir -p /usr/local/bin/hashicorp/vault153/vaultdata
+     mkdir -p /usr/local/bin/hashicorp/vault153
      sleep 2s
   } | whiptail --gauge "Creating any missing [required] folders" --title "Automationpro Configurator" 8 78 0
 }
@@ -83,6 +83,7 @@ function StartVault() {
      echo -e "XXX\n80\nStart Vault server\nXXX"
      systemctl start vault
      sleep 5s
+     ./usr/local/bin/hashicorp/vault153/vault operator init > /etc/vault/config/init.file
   } | whiptail --gauge "Starting Vault" --title "Automationpro Configurator" 8 78 0
 
 }

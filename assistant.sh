@@ -25,7 +25,6 @@ case $SEL in
         GetVaultHcl
         InitialVaultConfigurationPart1
         InitialVaultConfigurationPart2
-	InitialVaultConfigurationPart3
         StartVault
         CleanupVault
    ;;
@@ -57,11 +56,13 @@ function CheckSystemRequirements() {
 function InitialVaultConfigurationPart1() {
   {  echo -e "XXX\n10\nCreate Vault user (non-privileged)\nXXX"
      sudo useradd --system --home /etc/vault.d --shell /bin/false vault
-     echo -e "XXX\n30\nSetting owner on /usr/local/bin/hashicorp/vault153/vault\nXXX"
-     sudo chown -R vault:vault /usr/local/bin/hashicorp/vault153
-     echo -e "XXX\n67\nConfigure Vault autocomplete\nXXX"
+     echo -e "XXX\n25\nSetting owner on /usr/local/bin/hashicorp/vault153/vault\nXXX"
+     chown -R vault:vault /etc/vault.d
+     echo -e "XXX\n35\nSetting Permissions\nXXX"
+     chmod 640 /etc/vault.d/vault.hcl
+     echo -e "XXX\n66\nConfigure Vault autocomplete\nXXX"
      ./usr/local/bin/hashicorp/vault153/vault -autocomplete-install
-     echo -e "XXX\n88\nEnable Vault autocompletion\nXXX"
+     echo -e "XXX\n87\nEnable Vault autocompletion\nXXX"
      complete -C ./usr/local/bin/hashicorp/vault153/vault vault
   } | whiptail --gauge "Initial Vault configuration (part1)" --title "Automationpro Configurator" 8 78 0
 }
@@ -69,11 +70,6 @@ function InitialVaultConfigurationPart1() {
 function InitialVaultConfigurationPart2() {
    VAULTSERVICEFILE="https://raw.githubusercontent.com/pauledavey/AutomationPro_Hashicorp/master/vault.service"
    wget -P /etc/systemd/system "$VAULTSERVICEFILE" 2>&1 | sed -un 's/.* \([0-9]\+\)% .*/\1/p' | whiptail --gauge "Initial Vault configuration (part2)" --title "Automationpro Configurator" 8 78 0
-}
-
-function InitialVaultConfigurationPart3() {
-    chown --recursive vault:vault /etc/vault.d
-    sudo chmod 640 /etc/vault.d/vault.hcl
 }
 
 function CreateRequiredVaultFolders() {

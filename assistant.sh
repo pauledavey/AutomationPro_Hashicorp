@@ -69,6 +69,7 @@ function InitialVaultConfigurationPart1() {
 
 function InitialVaultConfigurationPart2() {
    VAULTSERVICEFILE="https://raw.githubusercontent.com/pauledavey/AutomationPro_Hashicorp/master/vault.service"
+   export VAULT_ADDR='http://127.0.0.1:8200'
    wget -P /etc/systemd/system "$VAULTSERVICEFILE" 2>&1 | sed -un 's/.* \([0-9]\+\)% .*/\1/p' | whiptail --gauge "Initial Vault configuration (part2)" --title "Automationpro Configurator" 8 78 0
 }
 

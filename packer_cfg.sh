@@ -4,19 +4,35 @@ clear
 function menu() {
 SEL=$(whiptail --title "AutomationPro - Hashicorp Assistant" --menu "Choose an option" 8 78 0 \
    "1" "Install Packer 1.6.2" \
-   "2" "Exit" 3>&1 1>&2 2>&3)
+   "2" "Install Vault 1.5.3" \
+   "3" "Clone AutomationPro Hashicorp Public Repo" \
+   "4" "Exit" 3>&1 1>&2 2>&3)
 
 case $SEL in
    1)
 	CheckSystemRequirements
-	CreateRequiredFolders
+	CreateRequiredPackerFolders
 	DownloadPacker
 	ExtractPacker
 	Cleanup
-	CloneAutomationProPackerGithubPublicRepo
-        whiptail --title "Automationpro Configurator" --msgbox "Configuration is complete. For more information please check the github repository and/or its' WIKI" 8 78 0
+	whiptail --title "Automationpro Configurator" --msgbox "Configuration is complete. For more information please check the github repository and/or its' WIKI" 8 78 0
    ;;
    2)
+        CheckSystemRequirements
+        CreateRequiredVaultFolders
+        DownloadVault
+        ExtractVault
+        SetVaultOwnership
+        GetVaultHcl
+        InitialVaultConfigurationPart1
+        InitialVaultConfigurationPart2
+        StartVault
+        Cleanup
+   ;;
+   3)
+        CloneAutomationProPackerGithubPublicRepo
+   ;;
+   4)
         exit
    ;;
 esac
@@ -35,20 +51,69 @@ function CheckSystemRequirements() {
   } | whiptail --gauge "Installing any missing requirements" --title "Automationpro Configurator" 8 78 0
 }
 
-function CreateRequiredFolders() {
+function InitialVaultConfigurationPart1() {
+  { echo -e "XXX\n0\nSetting owner on /usr/local/bin/hashicorp/vault153/vault\nXXX"
+     sudo chown root:root /usr/local/bin/hashicorp/vault153/vault
+     echo -e "XXX\n25\nConfigure Vault autocomplete\nXXX"
+     ./usr/local/bin/hashicorp/vault153/vault -autocomplete-install
+     echo -e "XXX\n50\nEnable Vault autocompletion\nXXX"
+     complete -C ./usr/local/bin/hashicorp/vault153/vault vault
+     echo -e "XXX\n75\nCreate Vault user (non-privileged)\nXXX"
+     sudo useradd --system --home /etc/vault.d --shell /bin/false vault
+  } | whiptail --gauge "Initial Vault configuration (part1)" --title "Automationpro Configurator" 8 78 0
+}
+
+function InitialVaultConfigurationPart2() {
+   VAULTSERVICEFILE="https://raw.githubusercontent.com/pauledavey/AutomationPro_Hashicorp/master/vault.service"
+   wget -P /etc/systemd/system "$VAULTSERVICEFILE" 2>&1 | sed -un 's/.* \([0-9]\+\)% .*/\1/p' | whiptail --gauge "Downloading vault_1.5.3_linux_amd64.zip" --title "Automationpro Configurator" 8 78 0
+}
+
+
+function CreateRequiredPackerFolders() {
   { echo -e "XXX\n0\nFolders in path '/usr/local/bin/hashicorp/packer162'\nXXX"
      mkdir -p /usr/local/bin/hashicorp/packer162
      sleep 2s
   } | whiptail --gauge "Creating any missing [required] folders" --title "Automationpro Configurator" 8 78 0
 }
 
+function CreateRequiredVaultFolders() {
+  { echo -e "XXX\n0\nFolders in path '/usr/local/bin/hashicorp/vault153/vaultdata'\nXXX"
+     mkdir -p /usr/local/bin/hashicorp/vault153
+     sleep 2s
+  } | whiptail --gauge "Creating any missing [required] folders" --title "Automationpro Configurator" 8 78 0
+}
+
+function StartVault() {
+   { echo -e "XXX\n40\nSystemctl enable vault\nXXX"
+     systemctl enable vault
+     echo -e "XXX\n80\nStart Vault server\nXXX"
+     systemctl start vault
+     sleep 5s
+  } | whiptail --gauge "Starting Vault" --title "Automationpro Configurator" 8 78 0
+
+}
+
 function DownloadPacker() {
-   URL="https://releases.hashicorp.com/packer/1.6.2/packer_1.6.2_linux_amd64.zip"
+   PACKERURL="https://releases.hashicorp.com/packer/1.6.2/packer_1.6.2_linux_amd64.zip"
    wget -P /usr/local/bin/hashicorp/packer162 "$URL" 2>&1 | sed -un 's/.* \([0-9]\+\)% .*/\1/p' | whiptail --gauge "Downloading packer_1.6.2_linux_amd64.zip" --title "Automationpro Configurator" 8 78 0
+}
+
+function DownloadVault() {
+   VAULTURL="https://releases.hashicorp.com/vault/1.5.3/vault_1.5.3_linux_amd64.zip"
+   wget -P /usr/local/bin/hashicorp/vault153 "$VAULTURL" 2>&1 | sed -un 's/.* \([0-9]\+\)% .*/\1/p' | whiptail --gauge "Downloading vault_1.5.3_linux_amd64.zip" --title "Automationpro Configurator" 8 78 0
+}
+
+function GetVaultHcl() {
+   VAULTCONFIGURL="https://raw.githubusercontent.com/pauledavey/AutomationPro_Hashicorp/master/config.hcl"
+   wget -P /usr/local/bin/hashicorp/vault153 "$VAULTCONFIGURL" 2>&1 | sed -un 's/.* \([0-9]\+\)% .*/\1/p' | whiptail --gauge "Downloading basic vault.hcl file" --title "Automationpro Configurator" 8 78 0
 }
 
 function ExtractPacker() {
    (pv -n /usr/local/bin/hasicorp/packer162/packer_1.6.2_linux_amd64.zip | unzip /usr/local/bin/hashicorp/packer162/packer_1.6.2_linux_amd64.zip -d /usr/local/bin/hashicorp/packer162/ ) 2>&1 | whiptail --gauge "Extracting packer_1.6.2_linux_amd64.zip" --title "Automationpro Configurator" 8 78 0
+}
+
+function ExtractVault() {
+   (pv -n /usr/local/bin/hasicorp/vault152/vault_1.5.3_linux_amd64.zip | unzip /usr/local/bin/hashicorp/vault153/vault_1.5.3_linux_amd64.zip -d /usr/local/bin/hashicorp/vault153/ ) 2>&1 | whiptail --gauge "Extracting vault_1.5.3_linux_amd64.zip" --title "Automationpro Configurator" 8 78 0
 }
 
 function Cleanup() {
@@ -69,3 +134,7 @@ wget https://download-ib01.fedoraproject.org/pub/epel/7/x86_64/Packages/p/pv-1.4
 rpm -Uvh *rpm
 clear
 menu
+
+
+
+

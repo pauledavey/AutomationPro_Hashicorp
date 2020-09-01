@@ -54,14 +54,14 @@ function CheckSystemRequirements() {
 
 ## Vault
 function InitialVaultConfigurationPart1() {
-  { echo -e "XXX\n0\nSetting owner on /usr/local/bin/hashicorp/vault153/vault\nXXX"
+  {  echo -e "XXX\n10\nCreate Vault user (non-privileged)\nXXX"
+     sudo useradd --system --home /usr/local/bin/hashicorp/vault153 --shell /bin/false vault
+     echo -e "XXX\n30\nSetting owner on /usr/local/bin/hashicorp/vault153/vault\nXXX"
      sudo chown root:root /usr/local/bin/hashicorp/vault153/vault
-     echo -e "XXX\n25\nConfigure Vault autocomplete\nXXX"
+     echo -e "XXX\n67\nConfigure Vault autocomplete\nXXX"
      ./usr/local/bin/hashicorp/vault153/vault -autocomplete-install
-     echo -e "XXX\n50\nEnable Vault autocompletion\nXXX"
+     echo -e "XXX\n88\nEnable Vault autocompletion\nXXX"
      complete -C ./usr/local/bin/hashicorp/vault153/vault vault
-     echo -e "XXX\n75\nCreate Vault user (non-privileged)\nXXX"
-     sudo useradd --system --home /etc/vault.d --shell /bin/false vault
   } | whiptail --gauge "Initial Vault configuration (part1)" --title "Automationpro Configurator" 8 78 0
 }
 

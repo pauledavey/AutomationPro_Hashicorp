@@ -151,6 +151,8 @@ wget https://download-ib01.fedoraproject.org/pub/epel/7/x86_64/Packages/p/pv-1.4
 rpm -Uvh *rpm
 clear
 menu
+clear
+systemctl status vault
 
 
 

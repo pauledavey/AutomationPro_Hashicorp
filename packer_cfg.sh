@@ -72,7 +72,7 @@ function InitialVaultConfigurationPart2() {
 
 function CreateRequiredVaultFolders() {
   { echo -e "XXX\n0\nFolders in path '/usr/local/bin/hashicorp/vault153/vaultdata'\nXXX"
-     mkdir -p /usr/local/bin/hashicorp/vault153
+     mkdir -p /usr/local/bin/hashicorp/vault153/vaultdata
      sleep 2s
   } | whiptail --gauge "Creating any missing [required] folders" --title "Automationpro Configurator" 8 78 0
 }

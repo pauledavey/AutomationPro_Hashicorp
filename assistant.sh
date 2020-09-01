@@ -84,7 +84,7 @@ function DownloadConfigJson() {
 }
 
 function EditConfigJsonFile() {
-  sed -i "s/<IPADDRESS>/ $(hostname -I)/g" /etc/vault/config.json
+  sed -i "s/<IPADDRESS>/$(hostname -I)/g" /etc/vault/config.json
 }
 
 function CreateVaultServiceFile() {

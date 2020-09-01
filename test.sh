@@ -2,7 +2,7 @@
 clear
 
 VAULTURL="https://releases.hashicorp.com/vault/1.5.3/vault_1.5.3_linux_amd64.zip"
-wget -P /tmp/ "$VAULTURL" 2>&1 | sed -un 's/.* \([0-9]\+\)% .*/\1/p'
+wget -P /tmp/ "$VAULTURL" 2>&1
 unzip /tmp/vault_1.5.3_linux_amd64.zip -d /usr/bin/
 mkdir /etc/vault
 mkdir /vault-data

@@ -12,7 +12,7 @@ wget -P /etc/vault/ "$VAULTCFG" 2>&1
 sed -i "s/<IPADDRESS>/$(hostname -I)/g" /etc/vault/config.json
 export VAULT_ADDR='http://$(hostname -I):8200'
 VAULTSERVICE="https://raw.githubusercontent.com/pauledavey/AutomationPro_Hashicorp/master/vault.service"
-wget -P /etc/systemd/system/vault.service "$VAULTSERVICE" 2>&1
+wget -P /etc/systemd/system/ "$VAULTSERVICE" 2>&1
 systemctl start vault.service
 systemctl enable vault.service
 vault operator init

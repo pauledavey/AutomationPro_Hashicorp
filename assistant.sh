@@ -83,7 +83,7 @@ function StartVault() {
      echo -e "XXX\n80\nStart Vault server\nXXX"
      systemctl start vault
      sleep 5s
-     ./usr/local/bin/hashicorp/vault153/vault operator init > /etc/vault/config/init.file
+     ./usr/local/bin/hashicorp/vault153/vault operator init > usr/local/bin/hashicorp/vault153/init.file
   } | whiptail --gauge "Starting Vault" --title "Automationpro Configurator" 8 78 0
 
 }

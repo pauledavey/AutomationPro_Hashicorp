@@ -11,7 +11,6 @@ function menu() {
 SEL=$(whiptail --title "AutomationPro - Hashicorp Assistant" --menu "Choose an option" 8 78 0 \
    "1" "Install Packer 1.6.2" \
    "2" "Install Vault 1.5.3" \
-   "3" "Install Packer 1.6.2 & Vault 1.5.3" \
    "4" "Clone AutomationPro Hashicorp Public Repo" \
    "5" "Exit" 3>&1 1>&2 2>&3)
 
@@ -21,10 +20,6 @@ case $SEL in
    ;;
    2)
         InstallVault
-   ;;
-   3)
-        InstallPacker
-	      InstallVault
    ;;
    4)
         CloneAutomationProPackerGithubPublicRepo

@@ -34,6 +34,16 @@ function InstallPacker() {
     DownloadPacker
     UnzipPacker
     CleanupPacker
+    
+    # Clear screen
+    clear
+
+    # tell user where things are
+    echo "Congratulations!"
+    echo "--------------------------------------------------------------------"
+    echo "Packer has been downloaded into /usr/bin"
+    echo "It is ready for use"
+    echo "--------------------------------------------------------------------"
 }
 
 #########PACKER
@@ -64,13 +74,21 @@ function InstallVault() {
     EnableForBootup
     InitiateVaultServer
 
+    # Clear screen
+    clear
+
     # tell user where things are
+    echo "Congratulations!"
+    echo "--------------------------------------------------------------------"
     echo "Your Hashicorp Vault is running. It should NOT be used in Production"
-    echo "This utility is designed to help you setup lab environments with a basic configuration"
-    echo "In the following file is the information you need to unseal your vault and start using it - tmp/init.file"
-    echo "You can access the web interface for vault by pointing your browser at http://$(hostname -I|awk '{print $1}'):8200/ui"
-    echo "You should probably consider sorting our ssl and https access next!"
+    echo "This utility is designed to help you setup a basic lab environment"
+    echo "Information to unseal your Vault can be found here - tmp/init.file"
+    echo "  ** You should not keep this information on the file system **"
+    echo "You can access the web interface by pointing a browser at"
+    echo "         http://$(hostname -I|awk '{print $1}'):8200/ui"
     echo ""
+    echo "You should consider sorting our ssl and https access !"
+    echo "--------------------------------------------------------------------"
 }
 
 #########VAULT
@@ -134,8 +152,14 @@ function CloneAutomationProPackerGithubPublicRepo() {
    stdbuf -o0 awk '/[.] +[0-9][0-9]?[0-9]?%/ { print substr($0,63,3) }' |
    whiptail --gauge "Cloning AutomationPro_Hasicorp Repository" --title "AutomationPro - Hashicorp Assistant" 8 78 0
 
-   # tell user where things are
+   # Clear screen
+    clear
+
+    # tell user where things are
+    echo "Congratulations!"
+    echo "--------------------------------------------------------------------"
     echo "The Automationpro_Hashiscorp Repository has been cloned to /home/git/"
+    echo "--------------------------------------------------------------------"
 }
 
 

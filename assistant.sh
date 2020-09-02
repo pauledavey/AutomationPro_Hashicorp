@@ -88,8 +88,8 @@ function EditConfigJsonFile() {
 }
 
 function ConfigureVaultExports() {
-  export VAULT_ADDR='http://$(hostname -I):8200'
-  echo "export VAULT_ADDR=http://$(hostname -I|awk '{print $1}'):8200" >> ~/.bashrc
+  export VAULT_ADDR="http://$(hostname -I|awk '{print $1}'):8200"
+  echo 'export VAULT_ADDR="http://$(hostname -I|awk '{print $1}'):8200" >> ~/.bashrc'
 }
 
 function CreateVaultServiceFile() {

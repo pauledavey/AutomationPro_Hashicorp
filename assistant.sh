@@ -29,7 +29,7 @@ case $SEL in
 esac
 }
 
-## Common
+######### Common
 function CheckSystemRequirements() {
   { echo -e "XXX\n0\nInstalling wget via yum\nXXX"
      yum install wget -y
@@ -50,14 +50,14 @@ function InstallVault() {
     CreateVaultFolders
     DownloadConfigJson
     EditConfigJsonFile
+    ConfigureVaultExports
     CreateVaultServiceFile
     StartVaultService
     EnableForBootup
-    ConfigureVaultExports
     InitiateVaultServer
 }
 
-
+#########VAULT
 function DownloadVault() {
   VAULTURL="https://releases.hashicorp.com/vault/1.5.3/vault_1.5.3_linux_amd64.zip"
   wget -P /tmp/ "$VAULTURL" 2>&1 | sed -un 's/.* \([0-9]\+\)% .*/\1/p' | whiptail --gauge "Downloading vault_1.5.3_linux_amd64.zip" --title "Automationpro Configurator" 8 78 0
@@ -84,12 +84,17 @@ function DownloadConfigJson() {
 }
 
 function EditConfigJsonFile() {
-  sed -i "s/<IPADDRESS>/$(hostname -I)/g" /etc/vault/config.json
+  sed -i "s/<IPADDRESS>/$(hostname -I|awk '{print $1}')/g" /etc/vault/config.json
+}
+
+function ConfigureVaultExports() {
+  export VAULT_ADDR='http://$(hostname -I):8200'
+  echo "export VAULT_ADDR=http://$(hostname -I|awk '{print $1}'):8200" >> ~/.bashrc
 }
 
 function CreateVaultServiceFile() {
   VAULTSERVICE="https://raw.githubusercontent.com/pauledavey/AutomationPro_Hashicorp/master/vault.service"
-  wget -P /etc/systemd/system/vault.service "$VAULTSERVICE" 2>&1 | sed -un 's/.* \([0-9]\+\)% .*/\1/p' | whiptail --gauge "Downloading config.json file" --title "Automationpro Configurator" 8 78 0
+  wget -P /etc/systemd/system/ "$VAULTSERVICE" 2>&1 | sed -un 's/.* \([0-9]\+\)% .*/\1/p' | whiptail --gauge "Downloading config.json file" --title "Automationpro Configurator" 8 78 0
 }
 
 function StartVaultService() {
@@ -100,74 +105,11 @@ function EnableForBootup() {
   systemctl enable vault.service
 }
 
-function ConfigureVaultExports() {
-  export VAULT_ADDR='http://$(hostname -I):8200'
-  echo "export VAULT_ADDR=http://$(hostname -I):8200" >> ~/.bashrc
-}
-
 function InitiateVaultServer() {
   vault operator init > /tmp/init.file
 }
 
-
-
-
-
-## Vault
-function InitialVaultConfigurationPart1() {
-  {  echo -e "XXX\n10\nCreate Vault user (non-privileged)\nXXX"
-     sudo useradd --system --home /etc/vault.d --shell /bin/false vault
-     echo -e "XXX\n25\nSetting owner on /usr/local/bin/hashicorp/vault153/vault\nXXX"
-     chown -R vault:vault /etc/vault.d
-     echo -e "XXX\n35\nSetting Permissions\nXXX"
-     chmod 640 /etc/vault.d/vault.hcl
-     echo -e "XXX\n66\nConfigure Vault autocomplete\nXXX"
-     ./usr/local/bin/hashicorp/vault153/vault -autocomplete-install
-     echo -e "XXX\n87\nEnable Vault autocompletion\nXXX"
-     complete -C ./usr/local/bin/hashicorp/vault153/vault vault
-  } | whiptail --gauge "Initial Vault configuration (part1)" --title "Automationpro Configurator" 8 78 0
-}
-
-function InitialVaultConfigurationPart2() {
-   VAULTSERVICEFILE="https://raw.githubusercontent.com/pauledavey/AutomationPro_Hashicorp/master/vault.service"
-   export VAULT_ADDR='http://127.0.0.1:8200'
-   wget -P /etc/systemd/system "$VAULTSERVICEFILE" 2>&1 | sed -un 's/.* \([0-9]\+\)% .*/\1/p' | whiptail --gauge "Initial Vault configuration (part2)" --title "Automationpro Configurator" 8 78 0
-}
-
-function CreateRequiredVaultFolders() {
-  { echo -e "XXX\n0\nFolders in path '/usr/local/bin/hashicorp/vault153/vaultdata'\nXXX"
-     mkdir --parents /usr/local/bin/hashicorp/vault153/vaultdata
-     mkdir --parents /etc/vault.d
-     sleep 2s
-  } | whiptail --gauge "Creating any missing [required] folders" --title "Automationpro Configurator" 8 78 0
-}
-
-function StartVault() {
-   { echo -e "XXX\n40\nSystemctl enable vault\nXXX"
-     systemctl enable vault
-     echo -e "XXX\n80\nStart Vault server\nXXX"
-     systemctl start vault
-     sleep 5s
-     /usr/local/bin/hashicorp/vault153/vault operator init -address 127.0.0.1:8200 > usr/local/bin/hashicorp/vault153/init.file
-  } | whiptail --gauge "Starting Vault" --title "Automationpro Configurator" 8 78 0
-
-}
-
-function DownloadVault() {
-   VAULTURL="https://releases.hashicorp.com/vault/1.5.3/vault_1.5.3_linux_amd64.zip"
-   wget -P /usr/local/bin/hashicorp/vault153 "$VAULTURL" 2>&1 | sed -un 's/.* \([0-9]\+\)% .*/\1/p' | whiptail --gauge "Downloading vault_1.5.3_linux_amd64.zip" --title "Automationpro Configurator" 8 78 0
-}
-
-function GetVaultHcl() {
-   VAULTCONFIGURL="https://raw.githubusercontent.com/pauledavey/AutomationPro_Hashicorp/master/config.hcl"
-   wget -P /etc/vault.d "$VAULTCONFIGURL" 2>&1 | sed -un 's/.* \([0-9]\+\)% .*/\1/p' | whiptail --gauge "Downloading basic vault.hcl file" --title "Automationpro Configurator" 8 78 0
-}
-
-function ExtractVault() {
-   (pv -n /usr/local/bin/hasicorp/vault152/vault_1.5.3_linux_amd64.zip | unzip /usr/local/bin/hashicorp/vault153/vault_1.5.3_linux_amd64.zip -d /usr/local/bin/hashicorp/vault153/ ) 2>&1 | whiptail --gauge "Extracting vault_1.5.3_linux_amd64.zip" --title "Automationpro Configurator" 8 78 0
-}
-
-## Packer
+############ Packer
 function CreateRequiredPackerFolders() {
   { echo -e "XXX\n0\nFolders in path '/usr/local/bin/hashicorp/packer162'\nXXX"
      mkdir -p /usr/local/bin/hashicorp/packer162

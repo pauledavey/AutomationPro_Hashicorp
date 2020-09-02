@@ -56,6 +56,8 @@ function CleanupPacker() {
 }
 
 function InstallVault() {
+    firewall-cmd --permanent --add-port=8200/tcp
+    firewall-cmd --reload
     DownloadVault
     UnzipVault
     CreateVaultFolders

@@ -28,21 +28,6 @@ case $SEL in
 esac
 }
 
-######### Common
-function CheckSystemRequirements() {
-  { echo -e "XXX\n0\nInstalling wget via yum\nXXX"
-     yum install wget -y
-     echo -e "XXX\n25\nInstalling unzip via yum\nXXX"
-     yum install unzip -y
-     echo -e "XXX\n50\nInstalling nano via yum\nXXX"
-     yum install nano -y
-     echo -e "XXX\n75\nInstalling git via yum\nXXX"
-     yum install git -y
-     sleep 2s
-  } | whiptail --gauge "Installing any missing requirements" --title "Automationpro Configurator" 8 78 0
-}
-
-
 function InstallVault() {
     DownloadVault
     UnzipVault
@@ -149,7 +134,10 @@ function CloneAutomationProPackerGithubPublicRepo() {
 #### 
 clear
 echo "Making magic.. please wait.."
-CheckSystemRequirements
+yum install wget -y
+yum install unzip -y
+yum install nano -y
+yum install git -y
 cd /tmp
 wget https://download-ib01.fedoraproject.org/pub/epel/7/x86_64/Packages/p/pv-1.4.6-1.el7.x86_64.rpm
 rpm -Uvh *rpm

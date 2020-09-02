@@ -1,6 +1,8 @@
 {
   "builders": [
     {
+      "iso_url": "{{user `iso_url`}}",
+      "iso_checksum_type": "{{user `iso_checksum_type`}}",
       "CPUs": "{{user `vm-cpu-num`}}",
       "RAM": "{{user `vm-mem-size`}}",
       "RAM_reserve_all": true,
@@ -20,8 +22,7 @@
       "guest_os_type": "windows9Server64Guest",
       "insecure_connection": "true",
       "iso_paths": [
-        "{{user `os_iso_path`}}",
-		"{{user `windows_vmware_tools`}}"
+         "{{user `windows_vmware_tools`}}"
       ],
       "network_adapters": [
         {

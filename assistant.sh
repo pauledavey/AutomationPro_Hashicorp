@@ -10,7 +10,6 @@ SEL=$(whiptail --title "AutomationPro - Hashicorp Assistant" --menu "Choose an o
 
 case $SEL in
    1)
-	CheckSystemRequirements
 	CreateRequiredPackerFolders
 	DownloadPacker
 	ExtractPacker
@@ -148,11 +147,12 @@ function CloneAutomationProPackerGithubPublicRepo() {
 
 
 #### 
+clear
 echo "Making magic.. please wait.."
+CheckSystemRequirements
 cd /tmp
 wget https://download-ib01.fedoraproject.org/pub/epel/7/x86_64/Packages/p/pv-1.4.6-1.el7.x86_64.rpm
 rpm -Uvh *rpm
-clear
 menu
 clear
 systemctl status vault

@@ -1,6 +1,12 @@
 #!/bin/bash
 clear
 
+# URLs
+PACKERURL="https://releases.hashicorp.com/packer/1.6.2/packer_1.6.2_linux_amd64.zip"
+VAULTURL="https://releases.hashicorp.com/vault/1.5.3/vault_1.5.3_linux_amd64.zip"
+VAULTCFG="https://raw.githubusercontent.com/pauledavey/AutomationPro_Hashicorp/master/vaultSetup/config.json"
+VAULTSERVICE="https://raw.githubusercontent.com/pauledavey/AutomationPro_Hashicorp/master/vaultSetup/vault.service"
+
 function menu() {
 SEL=$(whiptail --title "AutomationPro - Hashicorp Assistant" --menu "Choose an option" 8 78 0 \
    "1" "Install Packer 1.6.2" \
@@ -18,7 +24,7 @@ case $SEL in
    ;;
    3)
         InstallPacker
-	InstallVault
+	      InstallVault
    ;;
    4)
         CloneAutomationProPackerGithubPublicRepo
@@ -37,7 +43,6 @@ function InstallPacker() {
 
 #########PACKER
 function DownloadPacker() {
-  PACKERURL="https://releases.hashicorp.com/packer/1.6.2/packer_1.6.2_linux_amd64.zip"
   wget -P /tmp/ "$PACKERURL" 2>&1 | sed -un 's/.* \([0-9]\+\)% .*/\1/p' | whiptail --gauge "Downloading packer_1.6.2_linux_amd64.zip" --title "AutomationPro - Hashicorp Assistant" 8 78 0
 }
 
@@ -63,7 +68,6 @@ function InstallVault() {
     InitiateVaultServer
 
     # tell user where things are
-    clear
     echo "Your Hashicorp Vault is running. It should NOT be used in Production"
     echo "This utility is designed to help you setup lab environments with a basic configuration"
     echo "In the following file is the information you need to unseal your vault and start using it - tmp/init.file"
@@ -74,7 +78,6 @@ function InstallVault() {
 
 #########VAULT
 function DownloadVault() {
-  VAULTURL="https://releases.hashicorp.com/vault/1.5.3/vault_1.5.3_linux_amd64.zip"
   wget -P /tmp/ "$VAULTURL" 2>&1 | sed -un 's/.* \([0-9]\+\)% .*/\1/p' | whiptail --gauge "Downloading vault_1.5.3_linux_amd64.zip" --title "AutomationPro - Hashicorp Assistant" 8 78 0
 }
 
@@ -94,7 +97,6 @@ function CreateVaultFolders() {
 }
 
 function DownloadConfigJson() {
-  VAULTCFG="https://raw.githubusercontent.com/pauledavey/AutomationPro_Hashicorp/master/config.json"
   wget -P /etc/vault/ "$VAULTCFG" 2>&1 | sed -un 's/.* \([0-9]\+\)% .*/\1/p' | whiptail --gauge "Downloading config.json file" --title "AutomationPro - Hashicorp Assistant" 8 78 0
 }
 
@@ -108,7 +110,6 @@ function ConfigureVaultExports() {
 }
 
 function CreateVaultServiceFile() {
-  VAULTSERVICE="https://raw.githubusercontent.com/pauledavey/AutomationPro_Hashicorp/master/vault.service"
   wget -P /etc/systemd/system/ "$VAULTSERVICE" 2>&1 | sed -un 's/.* \([0-9]\+\)% .*/\1/p' | whiptail --gauge "Downloading config.json file" --title "AutomationPro - Hashicorp Assistant" 8 78 0
 }
 
@@ -131,9 +132,13 @@ function CleanupVault() {
 
 ######### Github Clone Option
 function CloneAutomationProPackerGithubPublicRepo() {
-   git clone https://github.com/pauledavey/AutomationPro_Hashicorp.git /usr/local/bin/hashicorp/automationpro > /dev/null 2>&1 |
+   mkdir --parent /home/git
+   git clone https://github.com/pauledavey/AutomationPro_Hashicorp.git /home/git > /dev/null 2>&1 |
    stdbuf -o0 awk '/[.] +[0-9][0-9]?[0-9]?%/ { print substr($0,63,3) }' |
-   whiptail --gauge "Cloning AutomationPro Packer Github repository" --title "AutomationPro - Hashicorp Assistant" 8 78 0
+   whiptail --gauge "Cloning AutomationPro_Hasicorp Repository" --title "AutomationPro - Hashicorp Assistant" 8 78 0
+
+   # tell user where things are
+    echo "The Automationpro_Hashiscorp Repository has been cloned to /home/git/"
 }
 
 
@@ -148,4 +153,3 @@ cd /tmp
 wget https://download-ib01.fedoraproject.org/pub/epel/7/x86_64/Packages/p/pv-1.4.6-1.el7.x86_64.rpm
 rpm -Uvh *rpm
 menu
-clear

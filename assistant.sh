@@ -55,6 +55,9 @@ function InstallVault() {
     StartVaultService
     EnableForBootup
     InitiateVaultServer
+    
+    # reboot the server; when it comes back up, Vault should be working
+    shutdown --reboot
 }
 
 #########VAULT

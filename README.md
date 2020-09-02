@@ -20,6 +20,8 @@ This repository contains helpers and examples as per documented at http://automa
 #### Option 2
 * Run the script direct from the github repository, by executing the following command
     `bash <(curl -s https://raw.githubusercontent.com/pauledavey/AutomationPro_Hashicorp/master/assistant.sh)`
+  or
+    'bash <)curl -s https://tinyurl.com/yyb2j3ue)'
 
 * Kick back and relax until it completes
 

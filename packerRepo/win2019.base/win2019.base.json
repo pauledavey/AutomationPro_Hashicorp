@@ -19,9 +19,11 @@
       "folder": "{{user `vsphere-folder`}}",
       "guest_os_type": "windows9Server64Guest",
       "insecure_connection": "true",
+      "iso_urls": [
+	"{{user `os_iso_path`}}"      
+      ],
       "iso_paths": [
-        "{{user `os_iso_path`}}",
-	"{{user `windows_vmware_tools`}}"
+        "{{user `windows_vmware_tools`}}"
       ],
       "network_adapters": [
         {

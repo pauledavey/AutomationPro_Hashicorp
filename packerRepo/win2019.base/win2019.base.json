@@ -40,13 +40,13 @@
       "username": "{{user `vsphere-user`}}",
       "vcenter_server": "{{user `vsphere-server`}}",
       "vm_name": "{{user `vm-name`}}",
-      "winrm_password": "{{user `winadmin-password`}}",
-      "winrm_username": "{{user `winadmin-username`}}"
+      "winrm_password": "{{user `windows-password`}}",
+      "winrm_username": "{{user `windows-username`}}"
     }
   ],
   "sensitive-variables": [
     "vsphere_password",
-    "winadmin_password",
-	"winadmin-username"
+    "windows_password",
+    "windows-username"
   ]
 }

@@ -29,7 +29,6 @@
           "network_card": "vmxnet3"
         }
       ],
-      "password": "{{user `vsphere-password`}}",
       "storage": [
         {
           "disk_size": "{{user `vm-disk-size`}}",
@@ -38,10 +37,11 @@
       ],
       "type": "vsphere-iso",
       "username": "{{user `vsphere-user`}}",
+      "password": "{{user `vsphere-password`}}",
       "vcenter_server": "{{user `vsphere-server`}}",
       "vm_name": "{{user `vm-name`}}",
-      "winrm_password": "{{user `windows-password`}}",
-      "winrm_username": "{{user `windows-username`}}"
+      "winrm_username": "{{user `windows-username`}}",
+      "winrm_password": "{{user `windows-password`}}"
     }
   ]
 }

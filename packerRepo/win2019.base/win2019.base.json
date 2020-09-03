@@ -43,10 +43,5 @@
       "winrm_password": "{{user `windows-password`}}",
       "winrm_username": "{{user `windows-username`}}"
     }
-  ],
-  "sensitive-variables": [
-    "vsphere_password",
-    "windows_password",
-    "windows-username"
   ]
 }

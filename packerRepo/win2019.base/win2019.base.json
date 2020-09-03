@@ -13,8 +13,8 @@
       "firmware": "bios",
       "floppy_files": [
             "autounattend.xml",
-			"../scripts/server2019/install-vm-tools.cmd",
-			"../scripts/server2019/enable-winrm.ps1"
+	    "../scripts/server2019/install-vm-tools.cmd",
+	    "../scripts/server2019/enable-winrm.ps1"
       ],
       "folder": "{{user `vsphere-folder`}}",
       "guest_os_type": "windows9Server64Guest",
